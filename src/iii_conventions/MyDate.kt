@@ -1,8 +1,14 @@
 package iii_conventions
 
-data class MyDate(val year: Int, val month: Int, val dayOfMonth: Int)
+import kotlin.comparisons.compareValuesBy
 
-operator fun MyDate.rangeTo(other: MyDate): DateRange = todoTask27()
+data class MyDate(val year: Int, val month: Int, val dayOfMonth: Int) : Comparable<MyDate> {
+    override fun compareTo(other: MyDate): Int {
+        return compareValuesBy(this, other, { it.year }, { it.month }, { it.dayOfMonth })
+    }
+}
+
+operator fun MyDate.rangeTo(other: MyDate) = DateRange(this, other)
 
 enum class TimeInterval {
     DAY,
@@ -10,4 +16,21 @@ enum class TimeInterval {
     YEAR
 }
 
-class DateRange(val start: MyDate, val endInclusive: MyDate)
+class DateRange(override val start: MyDate, override val endInclusive: MyDate) : ClosedRange<MyDate>, Iterable<MyDate> {
+    override fun iterator(): Iterator<MyDate> {
+        return object : Iterator<MyDate> {
+            private var nextDate = start
+
+            override fun next(): MyDate {
+                val current = nextDate
+                nextDate = nextDate.nextDay()
+                return current
+            }
+
+            override fun hasNext(): Boolean {
+                return nextDate <= endInclusive
+            }
+
+        }
+    }
+}

@@ -1,7 +1,7 @@
 package iii_conventions
 
-import util.TODO
 import iii_conventions.TimeInterval.*
+import util.TODO
 
 fun todoTask29(): Nothing = TODO(
     """
@@ -20,12 +20,25 @@ fun todoTask29(): Nothing = TODO(
     })
 
 fun task29_1(today: MyDate): MyDate {
-    todoTask29()
-//    return today + YEAR + WEEK
+    return today + YEAR + WEEK
+}
+
+infix operator fun MyDate.plus(timeInterval: TimeInterval): MyDate {
+    return this.addTimeIntervals(timeInterval, 1)
+}
+infix operator fun MyDate.plus(timeDuration: TimeDuration): MyDate {
+    return this.addTimeIntervals(timeDuration.interval, timeDuration.number)
 }
 
 fun task29_2(today: MyDate): MyDate {
-    todoTask29()
-//    return today + YEAR * 2 + WEEK * 3 + DAY * 5
+    return today + YEAR * 2 + WEEK * 3 + DAY * 5
+}
+
+infix operator fun TimeInterval.times(i: Int): TimeDuration {
+    return TimeDuration(i, this)
+}
+
+class TimeDuration(val number: Int, val interval: TimeInterval) {
+
 }
 
